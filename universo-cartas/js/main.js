@@ -116,7 +116,8 @@
         if (goFinalBtn) {
             goFinalBtn.addEventListener('click', () => {
                 if (currentState !== STATES.SOLAR_SYSTEM || isTransitioning) return;
-                window.location.href = 'final.html';
+                if (!Storage.getProgressSummary().allDiscovered) return;
+                startFinalJourney(false, false);
             });
         }
 
@@ -205,6 +206,21 @@
                 isTransitioning = false;
             });
         }, 550);
+    }
+
+    function startFinalJourney(reveal, replaceHistory) {
+        isTransitioning = true;
+        currentState = STATES.HYPERSPACE;
+        transitionCanvas.classList.remove('hidden');
+
+        Animations.playHyperspaceJump(transitionCanvas, () => {
+            const destination = reveal ? 'final.html?reveal=1' : 'final.html';
+            if (replaceHistory) {
+                window.location.replace(destination);
+            } else {
+                window.location.href = destination;
+            }
+        });
     }
 
     // ========================
@@ -417,16 +433,16 @@
 
             // Túnel inverso / estelas hacia estrellas
             Animations.playPlanetExitTransition(transitionCanvas, currentPlanetId, () => {
-                transitionCanvas.classList.add('hidden');
                 currentPlanetId = null;
 
                 // Al salir del 8.º planeta recién descubierto: ir al final (la canción suena allí)
                 if (revealFinalOnCompletion) {
                     revealFinalOnCompletion = false;
-                    window.location.replace('final.html?reveal=1');
+                    startFinalJourney(true, true);
                     return;
                 }
 
+                transitionCanvas.classList.add('hidden');
                 showSolarSystem();
                 isTransitioning = false;
             });
