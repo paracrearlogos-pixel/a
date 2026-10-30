@@ -924,3 +924,224 @@ button:focus:not(:focus-visible) {
         font-size: 0.7rem;
     }
 }
+
+
+/* Escena final: luna y control musical */
+.moon-scene {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(1.2rem, 3vh, 2rem);
+    width: 100%;
+    padding: 1rem;
+}
+
+/* Halo dinámico de la luna */
+.moon-portal {
+    --audio-level: 0;
+
+    flex-shrink: 0;
+    isolation: isolate;
+    overflow: visible;
+
+    filter:
+        drop-shadow(0 0 calc(2rem + var(--audio-level) * 2.5rem) rgba(151, 185, 255, calc(0.35 + var(--audio-level) * 0.5)));
+
+    transition: transform 0.4s ease, filter 0.08s linear;
+}
+
+.moon-portal::before {
+    inset: -12%;
+    background: radial-gradient(circle,
+            rgba(163, 193, 255, calc(0.25 + var(--audio-level) * 0.4)),
+            rgba(108, 139, 218, calc(0.10 + var(--audio-level) * 0.2)) 42%,
+            transparent 72%);
+
+    opacity: calc(0.75 + var(--audio-level) * 0.25);
+    transform: scale(calc(1 + var(--audio-level) * 0.16));
+
+    transition: opacity 0.08s linear, transform 0.08s linear;
+}
+
+.moon-portal img {
+    filter: drop-shadow(0 0 calc(1.5rem + var(--audio-level) * 2rem) rgba(186, 208, 255, calc(0.3 + var(--audio-level) * 0.6)));
+
+    transition: filter 0.08s linear;
+}
+
+/* Interacción al pasar el cursor */
+.moon-portal:hover,
+.moon-portal:focus-visible {
+    transform: scale(1.07);
+}
+
+/* Botón musical */
+#song-toggle {
+    position: relative;
+    z-index: 5;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.7rem;
+
+    min-width: 215px;
+    padding: 0.85rem 1.6rem;
+
+    font-family: var(--font-main);
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+
+    color: #f5f7ff;
+    background: rgba(12, 17, 42, 0.72);
+    border: 1px solid rgba(166, 197, 255, 0.4);
+    border-radius: 50px;
+
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    box-shadow:
+        0 0 20px rgba(110, 142, 251, 0.12),
+        inset 0 0 15px rgba(110, 142, 251, 0.05);
+
+    transition:
+        background 0.3s ease,
+        border-color 0.3s ease,
+        box-shadow 0.3s ease,
+        transform 0.3s ease;
+}
+
+#song-toggle:hover,
+#song-toggle:focus-visible {
+    background: rgba(50, 64, 115, 0.55);
+    border-color: rgba(180, 204, 255, 0.85);
+
+    box-shadow:
+        0 0 25px rgba(110, 142, 251, 0.3),
+        inset 0 0 18px rgba(110, 142, 251, 0.1);
+
+    transform: translateY(-2px);
+}
+
+#song-toggle:active {
+    transform: scale(0.97);
+}
+
+#song-toggle.is-playing {
+    border-color: rgba(180, 204, 255, 0.75);
+    box-shadow: 0 0 25px rgba(110, 142, 251, 0.25);
+}
+
+.song-icon {
+    font-size: 1.25rem;
+    line-height: 1;
+    color: #c3d4ff;
+}
+
+#song-toggle.is-playing .song-icon {
+    animation: musicIconPulse 1.2s ease-in-out infinite;
+}
+
+@keyframes musicIconPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        text-shadow: 0 0 5px rgba(166, 197, 255, 0.3);
+    }
+
+    50% {
+        transform: scale(1.18);
+        text-shadow: 0 0 15px rgba(166, 197, 255, 0.9);
+    }
+}
+
+/* Ajustes para móviles */
+@media (max-width: 600px) {
+    .moon-scene {
+        gap: 1.2rem;
+    }
+
+    .moon-portal {
+        width: min(76vw, 25rem);
+    }
+
+    #song-toggle {
+        top: 5rem;
+        min-width: 200px;
+        padding: 0.8rem 1.3rem;
+        font-size: 0.8rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #song-toggle.is-playing .song-icon {
+        animation: none;
+    }
+}
+
+/* ==========================================
+   MENSAJE ANIMADO DESPUÉS DE 2 MINUTOS
+   ========================================== */
+
+#surprise-message {
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    right: 0;
+    width: max-content;
+    max-width: none;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transform: translate(100%, -50%);
+    color: #fff0f6;
+    font-family: var(--font-display);
+    font-size: clamp(1.15rem, 3.2vw, 2.4rem);
+    font-weight: 600;
+    letter-spacing: 0.035em;
+    text-shadow:
+        0 0 8px rgba(255, 120, 180, 0.9),
+        0 0 20px rgba(255, 70, 150, 0.65),
+        0 0 38px rgba(255, 40, 130, 0.35);
+}
+
+#surprise-message.show-surprise-message {
+    visibility: visible;
+    animation: surpriseMessageFly 8s ease-in-out forwards;
+}
+
+@keyframes surpriseMessageFly {
+    0% {
+        opacity: 0;
+        transform: translate(100%, -50%);
+    }
+
+    12% {
+        opacity: 1;
+    }
+
+    82% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(calc(-100vw - 100%), -50%);
+        visibility: hidden;
+    }
+}
+
+@media (max-width: 600px) {
+    #surprise-message {
+        font-size: clamp(1rem, 4.2vw, 1.5rem);
+    }
+}

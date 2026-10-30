@@ -21,8 +21,8 @@ const LETTERS_DATA = [
         name: 'Mercurio',
         cardTitle: 'Princesa',
         subtitle: 'Has descubierto un nuevo mensaje.',
-        message: `Hola, preciosa!... Sabe algo? Usted me recuerda a Mercurio: pequeñita en tamaño, pero con muchísimas cualidades. Usted es una personita llena de empatía, seguridad, inteligencia, carisma, belleza, pasión y tantas otras virtudes que la hacen única.
-Este mensajito es para recordarle la mujer tan especial que es y lo mucho que vale. Nunca lo olvide ✨`,
+        message: `Hola!... Sabe algo? Usted me recuerda a Mercurio: pequeñita en tamaño, pero con muchísimas cualidades. Usted es una personita llena de empatía, seguridad, inteligencia, carisma, belleza, pasión y tantas otras virtudes que la hacen única.
+Este mensajito es para recordarle la mujer tan especial que es, lo mucho que vale y lo mucho que me encanta. Nunca lo olvide ✨`,
         colors: {
             primary: '#C0C0C0',
             secondary: '#808080',
@@ -39,7 +39,7 @@ Este mensajito es para recordarle la mujer tan especial que es y lo mucho que va
         cardTitle: 'Princesa',
         subtitle: 'Has descubierto un nuevo mensaje.',
         message: `Buenos días, buenas tardes o buenas noches! 😅 Nath, usted sabía que Venus es el planeta más brillante?... ✨ 
-Aunque no es una estrella, brilla gracias a la luz que refleja. Y eso me recuerda que no hace falta ser una estrella para iluminar la vida de los demás. Usted tiene esa bonita capacidad de irradiar luz y hacer que todo se sienta mejor 🥰 
+Venus aunque no es una estrella, brilla gracias a la luz que refleja. Y eso me recuerda que no hace falta ser una estrella para iluminar la vida de los demás. Usted tiene esa bonita capacidad de irradiar luz y hacer que todo se sienta mejor 🥰 
 Sonría más, que le queda bonito!...`,
         colors: {
             primary: '#DAA520',
@@ -90,7 +90,7 @@ Gracias por haberme escrito aquel día, niña preciosa ❤️💙`,
         cardTitle: 'Princesa',
         subtitle: 'Has descubierto un nuevo mensaje.',
         message: `Una preguntita, hoy ya le han dicho lo linda que es?. Si esa persona insípida que le anda coqueteando no se lo ha dicho, aquí estoy yo para recordárselo. 😏
-Señorita, usted es una niña espectacular y espero que nunca se le olvide lo bonita que es. Cuando la distancia deje de ser un problema, la voy a invitar a ver esos atardeceres que le debo y a tomarnos esos cafecitos que tenemos pendientes.
+Señorita, usted es una niña espectacular y espero que nunca se le olvide lo bonita que es. Cuando la distancia deje de ser un problema, la voy a invitar a ver esos atardeceres que le debo, a tomarnos unos cafecitos y a tener esos encuentros🔥 que tenemos pendientes.
 Espero que tenga un lindo día, niña bonita...`,
         colors: {
             primary: '#D2A85E',
@@ -107,8 +107,8 @@ Espero que tenga un lindo día, niña bonita...`,
         name: 'Saturno',
         cardTitle: 'Princesa',
         subtitle: 'Has descubierto un nuevo mensaje.',
-        message: ` Hola, señorita Tzuc. No sé a qué hora estará leyendo este mensajito, pero hoy solo quería recordarle que siempre la tengo presente. 
-Y si tiene un ratito libre, me encantaría que se regalara 5 minutitos para escuchar Quédate, de Manuel Medrano. 
+        message: ` Hola! No sé a qué hora estará leyendo este mensajito, pero hoy solo quería recordarle que siempre la tengo presente. 
+Y si tiene un ratito libre, me encantaría que se regalara 5 minutitos para escuchar La correcta, de Morat. 
 Espero que le guste mucho. Le mando muchos beshitos ❤️`,
         colors: {
             primary: '#DAC07A',
@@ -145,7 +145,7 @@ Creo que hoy no necesito decir más 🙈❤️`,
         name: 'Neptuno',
         cardTitle: 'Princesa',
         subtitle: 'Has descubierto un nuevo mensaje.',
-        message: `Holaaa! ¿Cómo está esa niña bonita?❤️ Hoy quiero recordarle algo que me gustaría que siempre tenga presente.
+        message: `Holaaa! ¿Cómo está niña bonita?❤️ Hoy quiero recordarle algo que me gustaría que siempre tenga presente.
 Señorita, no quiero que usted sea perfecta, ni está dentro de mis planes pedirle que lo sea. Al contrario, espero poder lograr que nunca sienta que tiene que serlo para merecer todo lo bonito que hay en este mundo.
 No olvide que la quiero muchoooooo ❤️`,
         colors: {
