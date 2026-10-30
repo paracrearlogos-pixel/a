@@ -144,7 +144,7 @@
                 z: Math.random() * 2000,
                 prevZ: 0,
                 speed: 0,
-                size: Math.random() * 2 + 0.5
+                size: Math.random() * 2 + 0.1
             });
         }
 

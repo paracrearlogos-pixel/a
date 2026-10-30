@@ -1,6 +1,27 @@
 (function () {
     'use strict';
 
+    // Canción de la vista final (carpeta song/). encodeURI maneja espacios y acentos.
+    const SONG_SRC = encodeURI('song/Manuel Medrano - Quédate (Audio Oficial).mp3');
+    const song = new Audio(SONG_SRC);
+    song.loop = true;
+    song.preload = 'auto';
+
+    function playSong() {
+        const attempt = song.play();
+        if (!attempt || !attempt.catch) return;
+        attempt.catch(function () {
+            // El navegador bloqueó el autoplay: sonará en el primer toque, clic o tecla
+            const events = ['pointerdown', 'touchstart', 'keydown'];
+            const unlock = function () {
+                song.play().then(function () {
+                    events.forEach(function (ev) { window.removeEventListener(ev, unlock); });
+                }).catch(function () { /* reintentará en el siguiente gesto */ });
+            };
+            events.forEach(function (ev) { window.addEventListener(ev, unlock); });
+        });
+    }
+
     const canvas = document.getElementById('final-starfield');
     const portal = document.querySelector('.moon-portal');
     const revealMoon = new URLSearchParams(window.location.search).has('reveal');
@@ -173,6 +194,7 @@
     }
     window.addEventListener('resize', resize);
     window.addEventListener('pagehide', function () {
+        song.pause();
         cancelAnimationFrame(animationId);
         window.removeEventListener('resize', resize);
         renderer.dispose();
@@ -182,4 +204,5 @@
 
     resize();
     animate();
+    playSong();
 })();

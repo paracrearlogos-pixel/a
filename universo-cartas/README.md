@@ -98,7 +98,7 @@ No es necesario modificar ningún otro archivo para cambiar textos, colores o im
 3. **Persistencia garantizada:** La fecha de desbloqueo se guarda con timestamp en `localStorage` y `cookies`, por lo que al recargar la página o cerrar el navegador el tiempo restante sigue siendo exacto.
 4. **Revisita sin límites:** Cualquier carta ya descubierta puede volver a leerse en cualquier momento sin reiniciar ni alterar el temporizador.
 5. **Planetas bloqueados:** Muestran un indicador visual y un modal con el tiempo exacto restante si se intentan abrir antes de tiempo.
-6. **Completado:** Al descubrir los 8 planetas, aparece la vista final con Luna-Dita. Al pulsarla, se inicia el viaje hiperespacial de regreso al sistema solar con los 8 planetas abiertos.
+6. **Completado:** Al descubrir los 8 planetas, se muestra la vista final con Luna-Dita y empieza a sonar la canción de la carpeta `song/`. Si vuelves a entrar con los 8 planetas ya descubiertos, llegas al universo con un botón "Ir al final" arriba a la derecha. Desde la vista final, al pulsar la luna, se inicia el viaje hiperespacial de regreso al sistema solar con los 8 planetas abiertos.
 
 ---
 

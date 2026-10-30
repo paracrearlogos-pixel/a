@@ -54,6 +54,7 @@
     let planetCardScreen, cardBgCanvas;
     let cardPlanetImg, cardPlanetName, cardSubtitle, cardTitle, cardMessage, cardReturnBtn;
     let lockedModal;
+    let goFinalBtn;
 
     // ========================
     // Inicialización
@@ -81,6 +82,7 @@
         cardMessage = $('card-message');
         cardReturnBtn = $('card-return-btn');
         lockedModal = $('locked-modal');
+        goFinalBtn = $('go-final-btn');
 
         if (enteredFromFinal) {
             Storage.unlockAll();
@@ -109,6 +111,14 @@
                 onReturnToUniverse();
             }
         });
+
+        // Botón superior derecho: ir a la vista final (solo visible con 8/8)
+        if (goFinalBtn) {
+            goFinalBtn.addEventListener('click', () => {
+                if (currentState !== STATES.SOLAR_SYSTEM || isTransitioning) return;
+                window.location.href = 'final.html';
+            });
+        }
 
         // Cerrar modal de bloqueo
         const lockedCloseBtn = $('locked-close-btn');
@@ -410,6 +420,13 @@
                 transitionCanvas.classList.add('hidden');
                 currentPlanetId = null;
 
+                // Al salir del 8.º planeta recién descubierto: ir al final (la canción suena allí)
+                if (revealFinalOnCompletion) {
+                    revealFinalOnCompletion = false;
+                    window.location.replace('final.html?reveal=1');
+                    return;
+                }
+
                 showSolarSystem();
                 isTransitioning = false;
             });
@@ -437,13 +454,12 @@
         Universe.updatePlanetStates(states);
 
         if (summary.allDiscovered) {
+            // Con 8/8 se queda en el universo y aparece el botón "Ir al final"
             uiCountdown.classList.add('hidden');
-            if (!enteredFromFinal) {
-                const finalUrl = revealFinalOnCompletion ? 'final.html?reveal=1' : 'final.html';
-                window.location.replace(finalUrl);
-            }
+            if (goFinalBtn) goFinalBtn.classList.remove('hidden');
         } else {
             uiCountdown.classList.remove('hidden');
+            if (goFinalBtn) goFinalBtn.classList.add('hidden');
         }
     }
 

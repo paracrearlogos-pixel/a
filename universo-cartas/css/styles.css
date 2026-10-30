@@ -881,3 +881,46 @@ button:focus:not(:focus-visible) {
 ::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.25);
 }
+
+/* ============================
+   BOTÓN "IR AL FINAL" (arriba a la derecha)
+   ============================ */
+
+#go-final-btn {
+    position: absolute;
+    top: 1.2rem;
+    right: 1.2rem;
+    z-index: 30;
+    padding: 0.6rem 1.3rem;
+    font-family: var(--font-main);
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #ffffff;
+    background: rgba(255, 215, 0, 0.15);
+    border: 1px solid rgba(255, 215, 0, 0.4);
+    border-radius: 30px;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+#go-final-btn:hover,
+#go-final-btn:focus-visible {
+    background: rgba(255, 215, 0, 0.25);
+    border-color: rgba(255, 215, 0, 0.8);
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.4);
+}
+
+/* En pantallas pequeñas baja un poco para no chocar con el título centrado */
+@media (max-width: 600px) {
+    #go-final-btn {
+        top: 3.6rem;
+        right: 1rem;
+        padding: 0.45rem 1rem;
+        font-size: 0.7rem;
+    }
+}
