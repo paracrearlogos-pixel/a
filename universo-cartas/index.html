@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="description"
+        content="Un universo por descubrir — Experiencia espacial interactiva con cartas ocultas en cada planeta.">
+    <title>Universo de Cartas</title>
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="css/styles.css">
+
+    <!-- Favicon inline (estrella) -->
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✨</text></svg>">
+</head>
+
+<body>
+
+    <!-- ==============================
+         PANTALLA DE BIENVENIDA
+         ============================== -->
+    <div id="welcome-screen" role="main" aria-label="Pantalla de bienvenida">
+        <canvas id="welcome-canvas" aria-hidden="true"></canvas>
+        <div class="welcome-content">
+            <h1 class="welcome-title">Un universo por descubrir</h1>
+            <p class="welcome-subtitle">¡Hola, Nath! En cada planeta escondí un pedacito de todo aquello que quisiera
+                decirle ✯</p>
+            <button id="start-button" aria-label="Iniciar viaje espacial" tabindex="0">
+                Iniciar Viaje ✨</button>
+        </div>
+    </div>
+
+    <!-- ==============================
+         CANVAS DE TRANSICIONES
+         ============================== -->
+    <canvas id="transition-canvas" class="hidden" aria-hidden="true"></canvas>
+
+    <!-- ==============================
+         SISTEMA SOLAR
+         ============================== -->
+    <div id="solar-system" class="hidden" role="main" aria-label="Sistema solar interactivo">
+
+        <!-- Contenedor Three.js -->
+        <div id="three-container"></div>
+
+        <!-- Canvas de celebración (finalización) -->
+        <canvas id="celebration-canvas" class="hidden" aria-hidden="true"></canvas>
+
+        <!-- UI Overlay -->
+
+        <!-- Título -->
+        <div id="ui-title" class="solar-ui" aria-label="Título">
+            Nuestro pequeño universo
+        </div>
+
+        <!-- Progreso -->
+        <div id="ui-progress" class="solar-ui" aria-live="polite">
+            Cartas descubiertas: 0 / 8
+        </div>
+
+        <!-- Contador -->
+        <div id="ui-countdown" class="solar-ui" aria-live="polite">
+            <span class="countdown-label">Tu primera carta está esperando.</span>
+        </div>
+
+        <!-- Leyenda -->
+        <div id="ui-legend" class="solar-ui" aria-label="Leyenda de estados">
+
+            <div class="legend-item">
+                <span class="legend-dot discovered"></span>
+                <span>Descubierto</span>
+            </div>
+        </div>
+
+        <!-- Tooltip de planeta -->
+        <div id="planet-tooltip" class="hidden" aria-hidden="true"></div>
+
+        <!-- Banner de finalización -->
+        <div id="completion-banner" class="hidden" role="alert">
+            <div class="completion-title">✦ Viaje Completado.✦</div>
+            <p class="completion-text">
+                Cada vez que mire las estrellas, recuerde que hay alguien que piensa en usted con muchísimo cariño, más
+                de lo que a veces sabe expresar con palabras ✨</p>
+            <button id="completion-close-btn" class="completion-btn" aria-label="Continuar explorando el sistema solar">
+                Continuar Explorando
+            </button>
+        </div>
+    </div>
+
+    <!-- ==============================
+         PANTALLA DE CARTA
+         ============================== -->
+    <div id="planet-card-screen" class="hidden" role="main" aria-label="Carta del planeta">
+        <canvas id="card-bg-canvas" aria-hidden="true"></canvas>
+        <div class="card-wrapper">
+            <!-- Imagen decorativa flotante del planeta -->
+            <div class="card-planet-preview">
+                <img id="card-planet-img" src="" alt="Planeta">
+            </div>
+            <h2 id="card-planet-name"></h2>
+            <p id="card-subtitle"></p>
+            <div class="card-body">
+                <h3 id="card-title"></h3>
+                <div id="card-message"></div>
+            </div>
+            <button id="card-return-btn" aria-label="Regresar al sistema solar" tabindex="0">
+                Regresar al Universo
+            </button>
+        </div>
+    </div>
+
+    <!-- ==============================
+         MODAL DE BLOQUEO
+         ============================== -->
+    <div id="locked-modal" class="hidden" role="dialog" aria-hidden="true" aria-label="Planeta bloqueado">
+        <div class="locked-icon" aria-hidden="true">🔒</div>
+        <p id="locked-text">Este planeta aún no está disponible.</p>
+        <button id="locked-close-btn">Entendido</button>
+    </div>
+
+    <!-- ==============================
+         SCRIPTS
+         ============================== -->
+    <!-- Three.js (r128 - versión estable CDN) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <!-- Módulos de la aplicación (orden de carga importa) -->
+    <script src="js/letters.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/planets.js"></script>
+    <script src="js/universe.js"></script>
+    <script src="js/animations.js"></script>
+    <script src="js/main.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,857 @@
+/**
+ * styles.css — Estilos completos de Universo de Cartas
+ *
+ * Organización:
+ *   1. Reset y variables
+ *   2. Estructura general
+ *   3. Pantalla de bienvenida
+ *   4. Canvas de transiciones
+ *   5. Sistema solar (UI overlay)
+ *   6. Tooltip de planetas
+ *   7. Pantalla de carta
+ *   8. Modal de bloqueo
+ *   9. Banner de finalización
+ *  10. Responsive
+ *  11. Accesibilidad
+ *  12. Animaciones
+ */
+
+/* ============================
+   1. RESET Y VARIABLES
+   ============================ */
+
+:root {
+    --color-bg: #000005;
+    --color-text: #e0e0e8;
+    --color-text-dim: #8888aa;
+    --color-accent: #6e8efb;
+    --color-accent-glow: rgba(110, 142, 251, 0.4);
+    --color-gold: #ffd700;
+    --color-glass-bg: rgba(15, 15, 40, 0.65);
+    --color-glass-border: rgba(255, 255, 255, 0.08);
+
+    --font-main: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+    --font-display: Georgia, 'Times New Roman', serif;
+
+    --transition-fast: 0.3s ease;
+    --transition-medium: 0.6s ease;
+    --transition-slow: 1s ease;
+
+    /* Variables dinámicas para la pantalla de carta */
+    --planet-primary: #6e8efb;
+    --planet-secondary: #4a5fc1;
+    --planet-accent: #a0b4ff;
+    --planet-glow: rgba(110, 142, 251, 0.4);
+}
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-main);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================
+   2. ESTRUCTURA GENERAL
+   ============================ */
+
+.hidden {
+    display: none !important;
+}
+
+.fading-out {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+}
+
+canvas {
+    display: block;
+}
+
+/* ============================
+   3. PANTALLA DE BIENVENIDA
+   ============================ */
+
+#welcome-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    transition: opacity 0.6s ease;
+}
+
+#welcome-canvas {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+}
+
+.welcome-content {
+    position: relative;
+    z-index: 1;
+    padding: 2rem;
+    max-width: 600px;
+    animation: fadeInUp 1.5s ease forwards;
+}
+
+.welcome-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    color: #ffffff;
+    text-shadow: 0 0 30px rgba(110, 142, 251, 0.3);
+    margin-bottom: 1.2rem;
+    line-height: 1.2;
+}
+
+.welcome-subtitle {
+    font-size: clamp(0.9rem, 2.5vw, 1.15rem);
+    color: var(--color-text-dim);
+    font-weight: 300;
+    letter-spacing: 0.05em;
+    line-height: 1.6;
+    margin-bottom: 3rem;
+}
+
+#start-button {
+    display: inline-block;
+    padding: 1rem 2.5rem;
+    font-family: var(--font-main);
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #ffffff;
+    background: transparent;
+    border: 1px solid rgba(110, 142, 251, 0.5);
+    border-radius: 50px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    box-shadow: 0 0 20px rgba(110, 142, 251, 0.15),
+        inset 0 0 20px rgba(110, 142, 251, 0.05);
+    animation: pulse-border 3s ease-in-out infinite;
+}
+
+#start-button:hover,
+#start-button:focus-visible {
+    background: rgba(110, 142, 251, 0.15);
+    border-color: rgba(110, 142, 251, 0.8);
+    box-shadow: 0 0 40px rgba(110, 142, 251, 0.3),
+        inset 0 0 30px rgba(110, 142, 251, 0.1);
+    transform: scale(1.05);
+}
+
+#start-button:active {
+    transform: scale(0.98);
+}
+
+#start-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: radial-gradient(circle, rgba(110, 142, 251, 0.3), transparent);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+}
+
+#start-button:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+/* ============================
+   4. CANVAS DE TRANSICIONES
+   ============================ */
+
+#transition-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    pointer-events: none;
+}
+
+/* ============================
+   5. SISTEMA SOLAR (UI)
+   ============================ */
+
+#solar-system {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+}
+
+#three-container {
+    position: absolute;
+    inset: 0;
+}
+
+/* UI overlay sobre el sistema solar */
+.solar-ui {
+    position: absolute;
+    z-index: 20;
+    pointer-events: none;
+}
+
+.solar-ui>* {
+    pointer-events: auto;
+}
+
+/* Título superior */
+#ui-title {
+    top: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-display);
+    font-size: clamp(1rem, 3vw, 1.5rem);
+    font-weight: 300;
+    letter-spacing: 0.12em;
+    color: rgba(255, 255, 255, 0.6);
+    text-shadow: 0 0 20px rgba(110, 142, 251, 0.2);
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* Progreso inferior izquierda */
+#ui-progress {
+    bottom: 1.5rem;
+    left: 1.5rem;
+    font-size: clamp(0.75rem, 2vw, 0.9rem);
+    color: var(--color-text-dim);
+    letter-spacing: 0.05em;
+    background: var(--color-glass-bg);
+    padding: 0.6rem 1.2rem;
+    border-radius: 20px;
+    border: 1px solid var(--color-glass-border);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+/* Contador inferior centro */
+#ui-countdown {
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    background: var(--color-glass-bg);
+    padding: 0.6rem 1.5rem;
+    border-radius: 20px;
+    border: 1px solid var(--color-glass-border);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    min-width: 250px;
+}
+
+.countdown-label {
+    display: block;
+    font-size: clamp(0.7rem, 1.8vw, 0.85rem);
+    color: var(--color-text-dim);
+    letter-spacing: 0.05em;
+    margin-bottom: 0.2rem;
+}
+
+.countdown-ready {
+    color: var(--color-gold) !important;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.countdown-timer {
+    display: block;
+    font-size: clamp(1.1rem, 3vw, 1.5rem);
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    color: #ffffff;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Leyenda inferior derecha */
+#ui-legend {
+    bottom: 1.5rem;
+    right: 1.5rem;
+    font-size: clamp(0.65rem, 1.5vw, 0.8rem);
+    color: var(--color-text-dim);
+    background: var(--color-glass-bg);
+    padding: 0.6rem 1rem;
+    border-radius: 12px;
+    border: 1px solid var(--color-glass-border);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.3rem;
+}
+
+.legend-item:last-child {
+    margin-bottom: 0;
+}
+
+.legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.legend-dot.available {
+    background: var(--color-gold);
+    box-shadow: 0 0 6px rgba(255, 215, 0, 0.5);
+}
+
+.legend-dot.locked {
+    background: #555;
+    border: 1px solid #777;
+}
+
+.legend-dot.discovered {
+    background: #4CAF50;
+    box-shadow: 0 0 6px rgba(76, 175, 80, 0.5);
+}
+
+/* ============================
+   6. TOOLTIP DE PLANETAS
+   ============================ */
+
+#planet-tooltip {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -120%);
+    z-index: 30;
+    font-size: 0.95rem;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    color: #ffffff;
+    background: var(--color-glass-bg);
+    padding: 0.5rem 1.2rem;
+    border-radius: 20px;
+    border: 1px solid var(--color-glass-border);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    pointer-events: none;
+    text-align: center;
+    transition: opacity 0.3s ease;
+    white-space: nowrap;
+}
+
+#planet-tooltip.hidden {
+    display: block !important;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* ============================
+   7. PANTALLA DE CARTA
+   ============================ */
+
+#planet-card-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.5s ease;
+    overflow-y: auto;
+}
+
+#card-bg-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+}
+
+.card-wrapper {
+    position: relative;
+    z-index: 1;
+    width: 90%;
+    max-width: 700px;
+    padding: 2rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: fadeInUp 0.8s ease forwards;
+}
+
+/* Vista previa flotante del planeta en la carta */
+.card-planet-preview {
+    margin-bottom: 0.8rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#card-planet-img {
+    width: clamp(75px, 15vw, 115px);
+    height: clamp(75px, 15vw, 115px);
+    object-fit: contain;
+    filter: drop-shadow(0 0 30px var(--planet-glow));
+    animation: floatPlanet 4s ease-in-out infinite;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+@keyframes floatPlanet {
+
+    0%,
+    100% {
+        transform: translateY(0) scale(1);
+    }
+
+    50% {
+        transform: translateY(-8px) scale(1.04);
+    }
+}
+
+#card-planet-name {
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 5vw, 2.8rem);
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    margin-bottom: 0.3rem;
+    text-shadow: 0 0 30px var(--planet-glow);
+    text-align: center;
+}
+
+#card-subtitle {
+    font-size: clamp(0.8rem, 2vw, 0.95rem);
+    color: var(--color-text-dim);
+    letter-spacing: 0.08em;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.card-body {
+    width: 100%;
+    background: var(--color-glass-bg);
+    border: 1px solid var(--color-glass-border);
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.5),
+        0 0 80px var(--planet-glow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.card-body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg,
+            transparent,
+            var(--planet-accent),
+            transparent);
+    opacity: 0.4;
+}
+
+#card-title {
+    font-family: var(--font-display);
+    font-size: clamp(1rem, 2.5vw, 1.3rem);
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    color: var(--planet-primary);
+    margin-bottom: 1.5rem;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+#card-message {
+    font-size: clamp(0.9rem, 2vw, 1.05rem);
+    line-height: 1.8;
+    color: var(--color-text);
+    text-align: center;
+}
+
+#card-message p {
+    margin-bottom: 1rem;
+}
+
+#card-message p:last-child {
+    margin-bottom: 0;
+}
+
+#card-return-btn {
+    margin-top: 2.5rem;
+    padding: 0.9rem 2rem;
+    font-family: var(--font-main);
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text);
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.05);
+}
+
+#card-return-btn:hover,
+#card-return-btn:focus-visible {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--planet-primary);
+    box-shadow: 0 0 25px var(--planet-glow);
+    transform: scale(1.03);
+}
+
+#card-return-btn:active {
+    transform: scale(0.97);
+}
+
+/* ============================
+   8. MODAL DE BLOQUEO
+   ============================ */
+
+#locked-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 300;
+    background: var(--color-glass-bg);
+    border: 1px solid var(--color-glass-border);
+    border-radius: 16px;
+    padding: 1.5rem 2rem;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    text-align: center;
+    max-width: 400px;
+    width: 85%;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+    animation: fadeInScale 0.3s ease forwards;
+}
+
+#locked-modal .locked-icon {
+    font-size: 2rem;
+    margin-bottom: 0.8rem;
+}
+
+#locked-text {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--color-text-dim);
+    margin-bottom: 1rem;
+}
+
+#locked-close-btn {
+    padding: 0.5rem 1.5rem;
+    font-size: 0.8rem;
+    font-family: var(--font-main);
+    letter-spacing: 0.1em;
+    color: var(--color-text);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#locked-close-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* ============================
+   9. BANNER DE FINALIZACIÓN
+   ============================ */
+
+#completion-banner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 25;
+    text-align: center;
+    max-width: 500px;
+    width: 90%;
+    background: var(--color-glass-bg);
+    border: 1px solid var(--color-glass-border);
+    border-radius: 20px;
+    padding: 2rem;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 0 60px rgba(255, 215, 0, 0.1);
+    animation: fadeInUp 1s ease forwards;
+    pointer-events: auto;
+}
+
+.completion-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.2rem, 3vw, 1.6rem);
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    color: var(--color-gold);
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+    margin-bottom: 1rem;
+}
+
+.completion-text {
+    font-size: clamp(0.85rem, 2vw, 0.95rem);
+    line-height: 1.8;
+    color: var(--color-text-dim);
+}
+
+.completion-btn {
+    margin-top: 1.5rem;
+    padding: 0.75rem 1.8rem;
+    font-family: var(--font-main);
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #ffffff;
+    background: rgba(255, 215, 0, 0.15);
+    border: 1px solid rgba(255, 215, 0, 0.4);
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+}
+
+.completion-btn:hover {
+    background: rgba(255, 215, 0, 0.25);
+    border-color: rgba(255, 215, 0, 0.8);
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.4);
+    transform: scale(1.03);
+}
+
+.completion-btn:active {
+    transform: scale(0.98);
+}
+
+#celebration-canvas {
+    position: absolute;
+    inset: 0;
+    z-index: 15;
+    pointer-events: none;
+}
+
+/* ============================
+   10. RESPONSIVE
+   ============================ */
+
+/* Tablets */
+@media (max-width: 1024px) {
+    #ui-legend {
+        display: none;
+    }
+}
+
+/* Móviles */
+@media (max-width: 768px) {
+    #ui-title {
+        top: 3rem;
+        font-size: 1.5rem;
+        letter-spacing: 0.08em;
+    }
+
+    #ui-progress {
+        bottom: auto;
+        top: auto;
+        bottom: 4.5rem;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.7rem;
+        white-space: nowrap;
+    }
+
+    #ui-countdown {
+        bottom: 0.8rem;
+        min-width: 200px;
+        padding: 0.5rem 1rem;
+    }
+
+    .countdown-timer {
+        font-size: 1.1rem;
+    }
+
+    #ui-legend {
+        display: none;
+    }
+
+    /* Carta */
+    .card-wrapper {
+        width: 95%;
+        padding: 1rem 0;
+    }
+
+    .card-body {
+        padding: 1.5rem 1.2rem;
+        border-radius: 16px;
+    }
+
+    #card-return-btn {
+        margin-top: 1.5rem;
+        padding: 0.8rem 1.6rem;
+    }
+
+    /* Permitir scroll en carta */
+    #planet-card-screen {
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 1rem;
+    }
+
+    /* Tooltip centrado arriba */
+    #planet-tooltip {
+        top: 4rem;
+        transform: translateX(-50%);
+    }
+}
+
+/* Pantallas muy pequeñas */
+@media (max-width: 400px) {
+    .welcome-content {
+        padding: 1rem;
+    }
+
+    #start-button {
+        padding: 0.8rem 1.8rem;
+        font-size: 0.85rem;
+    }
+
+    .card-body {
+        padding: 1.2rem 1rem;
+    }
+}
+
+/* ============================
+   11. ACCESIBILIDAD
+   ============================ */
+
+/* Focus visible */
+:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+}
+
+button:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* Movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.2s !important;
+    }
+
+    #start-button {
+        animation: none;
+    }
+
+    .fading-out {
+        transition-duration: 0.1s !important;
+    }
+}
+
+/* Screen reader only */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+/* ============================
+   12. ANIMACIONES
+   ============================ */
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+@keyframes pulse-border {
+
+    0%,
+    100% {
+        box-shadow: 0 0 20px rgba(110, 142, 251, 0.15),
+            inset 0 0 20px rgba(110, 142, 251, 0.05);
+    }
+
+    50% {
+        box-shadow: 0 0 35px rgba(110, 142, 251, 0.25),
+            inset 0 0 30px rgba(110, 142, 251, 0.1);
+    }
+}
+
+/* Scrollbar personalizado */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
