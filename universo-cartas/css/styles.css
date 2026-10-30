@@ -918,8 +918,8 @@ button:focus:not(:focus-visible) {
 /* En pantallas pequeñas baja un poco para no chocar con el título centrado */
 @media (max-width: 600px) {
     #go-final-btn {
-        top: 3.6rem;
-        right: 1rem;
+        top: 56rem;
+        right: 10rem;
         padding: 0.45rem 1rem;
         font-size: 0.7rem;
     }

@@ -21,7 +21,7 @@
     // =========================================================================
     // REGLA OFICIAL: 1 carta nueva cada 24 horas.
     // =========================================================================
-    let DISABLE_COUNTDOWN_FOR_TESTING = false;
+    let DISABLE_COUNTDOWN_FOR_TESTING = true;
 
     // Clave base para almacenamiento
     const STORAGE_KEY = 'universoCartas_progress';
