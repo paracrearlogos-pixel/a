@@ -919,7 +919,7 @@ button:focus:not(:focus-visible) {
 @media (max-width: 600px) {
     #go-final-btn {
         top:6rem;
-        right: 10rem;
+        right: 8rem;
         padding: 0.45rem 1rem;
         font-size: 0.7rem;
     }
