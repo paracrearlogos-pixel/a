@@ -43,6 +43,8 @@
     // Elementos del DOM
     // ========================
     const $ = id => document.getElementById(id);
+    const enteredFromFinal = new URLSearchParams(window.location.search).has('finalJourney');
+    let revealFinalOnCompletion = false;
 
     let welcomeScreen, startButton, welcomeCanvas;
     let transitionCanvas;
@@ -51,7 +53,6 @@
     let planetTooltip;
     let planetCardScreen, cardBgCanvas;
     let cardPlanetImg, cardPlanetName, cardSubtitle, cardTitle, cardMessage, cardReturnBtn;
-    let completionBanner, completionCloseBtn;
     let lockedModal;
 
     // ========================
@@ -79,9 +80,11 @@
         cardTitle = $('card-title');
         cardMessage = $('card-message');
         cardReturnBtn = $('card-return-btn');
-        completionBanner = $('completion-banner');
-        completionCloseBtn = $('completion-close-btn');
         lockedModal = $('locked-modal');
+
+        if (enteredFromFinal) {
+            Storage.unlockAll();
+        }
 
         // Mostrar pantalla de bienvenida
         showWelcomeScreen();
@@ -110,26 +113,6 @@
         // Cerrar modal de bloqueo
         const lockedCloseBtn = $('locked-close-btn');
 
-        // Botón para volver al inicio del viaje
-
-        // Botón para continuar explorando los planetas
-        if (completionCloseBtn) {
-            completionCloseBtn.addEventListener('click', () => {
-                Animations.stopCelebration();
-
-                const celebCanvas = $('celebration-canvas');
-                if (celebCanvas) {
-                    celebCanvas.classList.add('hidden');
-                }
-
-                completionBanner.classList.add('hidden');
-
-                showSolarSystem();
-            });
-        }
-
-
-
         // Teclado: Escape
         document.addEventListener('keydown', e => {
             if (e.key === 'Escape') {
@@ -139,9 +122,6 @@
                 if (lockedModal && !lockedModal.classList.contains('hidden')) {
                     lockedModal.classList.add('hidden');
                     lockedModal.setAttribute('aria-hidden', 'true');
-                }
-                if (completionBanner && !completionBanner.classList.contains('hidden')) {
-                    completionBanner.classList.add('hidden');
                 }
             }
         });
@@ -158,6 +138,10 @@
             '  - UniversoCartas.Storage.resetProgress()             : Reiniciar progreso a cero',
             'color: #6e8efb; font-size: 13px; font-weight: bold;'
         );
+
+        if (enteredFromFinal) {
+            onStartJourney();
+        }
     }
 
     // ========================
@@ -279,6 +263,7 @@
                 // Descubrir carta nueva
                 const success = Storage.discoverPlanet(planetId);
                 if (success) {
+                    revealFinalOnCompletion = Storage.getProgressSummary().allDiscovered;
                     travelToPlanet(planetId);
                 }
                 break;
@@ -451,19 +436,13 @@
         });
         Universe.updatePlanetStates(states);
 
-        // Pantalla de finalización
         if (summary.allDiscovered) {
-            completionBanner.classList.remove('hidden');
             uiCountdown.classList.add('hidden');
-
-            Animations.stopCelebration();
-            const celebCanvas = $('celebration-canvas');
-            if (celebCanvas) {
-                celebCanvas.classList.remove('hidden');
-                Animations.playCelebration(celebCanvas);
+            if (!enteredFromFinal) {
+                const finalUrl = revealFinalOnCompletion ? 'final.html?reveal=1' : 'final.html';
+                window.location.replace(finalUrl);
             }
         } else {
-            completionBanner.classList.add('hidden');
             uiCountdown.classList.remove('hidden');
         }
     }

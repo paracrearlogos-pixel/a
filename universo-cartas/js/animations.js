@@ -622,65 +622,6 @@
     }
 
     // ================================================================
-    // ANIMACIÓN DE CELEBRACIÓN (FINALIZACIÓN)
-    // ================================================================
-
-    let celebrationAnimId = null;
-
-    function playCelebration(canvas) {
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        const w = canvas.width;
-        const h = canvas.height;
-
-        const sparkles = [];
-        for (let i = 0; i < 100; i++) {
-            sparkles.push({
-                x: Math.random() * w,
-                y: Math.random() * h,
-                size: Math.random() * 3 + 1,
-                speedY: -(Math.random() * 0.5 + 0.1),
-                opacity: Math.random() * 0.6 + 0.2,
-                phase: Math.random() * Math.PI * 2,
-                color: ['#FFD700', '#87CEEB', '#FF6347', '#40E0D0', '#DA70D6', '#98FB98'][
-                    Math.floor(Math.random() * 6)
-                ]
-            });
-        }
-
-        function animateCelebration() {
-            celebrationAnimId = requestAnimationFrame(animateCelebration);
-            ctx.fillStyle = 'rgba(0, 0, 5, 0.05)';
-            ctx.fillRect(0, 0, w, h);
-
-            const time = Date.now() * 0.001;
-            sparkles.forEach(s => {
-                if (!reducedMotion) {
-                    s.y += s.speedY;
-                    s.x += Math.sin(time + s.phase) * 0.3;
-                }
-                if (s.y < -10) s.y = h + 10;
-
-                const twinkle = Math.sin(time * 2 + s.phase) * 0.3 + 0.7;
-                ctx.beginPath();
-                ctx.arc(s.x, s.y, s.size * twinkle, 0, Math.PI * 2);
-                ctx.fillStyle = hexToRGBA(s.color, s.opacity * twinkle);
-                ctx.fill();
-            });
-        }
-
-        animateCelebration();
-    }
-
-    function stopCelebration() {
-        if (celebrationAnimId) {
-            cancelAnimationFrame(celebrationAnimId);
-            celebrationAnimId = null;
-        }
-    }
-
-    // ================================================================
     // EXPORTAR
     // ================================================================
     window.UniversoCartas = window.UniversoCartas || {};
@@ -692,10 +633,7 @@
         playPlanetExitTransition,
         startCardBackground,
         stopCardBackground,
-        playCelebration,
-        stopCelebration,
         hexToRGBA
     };
 
 })();
-

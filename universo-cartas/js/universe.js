@@ -615,7 +615,7 @@
         }
 
         // Estrellas fugaces
-        if (!reducedMotion && Math.random() < 0.004) {
+        if (!reducedMotion && Math.random() < 0.20) {
             spawnShootingStar();
         }
         updateShootingStars();
