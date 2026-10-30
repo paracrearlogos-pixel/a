@@ -43,6 +43,8 @@
     // Elementos del DOM
     // ========================
     const $ = id => document.getElementById(id);
+    const enteredFromFinal = new URLSearchParams(window.location.search).has('finalJourney');
+    let revealFinalOnCompletion = false;
 
     let welcomeScreen, startButton, welcomeCanvas;
     let transitionCanvas;
@@ -51,8 +53,8 @@
     let planetTooltip;
     let planetCardScreen, cardBgCanvas;
     let cardPlanetImg, cardPlanetName, cardSubtitle, cardTitle, cardMessage, cardReturnBtn;
-    let completionBanner, completionCloseBtn;
     let lockedModal;
+    let goFinalBtn;
 
     // ========================
     // Inicialización
@@ -79,9 +81,12 @@
         cardTitle = $('card-title');
         cardMessage = $('card-message');
         cardReturnBtn = $('card-return-btn');
-        completionBanner = $('completion-banner');
-        completionCloseBtn = $('completion-close-btn');
         lockedModal = $('locked-modal');
+        goFinalBtn = $('go-final-btn');
+
+        if (enteredFromFinal) {
+            Storage.unlockAll();
+        }
 
         // Mostrar pantalla de bienvenida
         showWelcomeScreen();
@@ -107,28 +112,16 @@
             }
         });
 
-        // Cerrar modal de bloqueo
-        const lockedCloseBtn = $('locked-close-btn');
-
-        // Botón para volver al inicio del viaje
-
-        // Botón para continuar explorando los planetas
-        if (completionCloseBtn) {
-            completionCloseBtn.addEventListener('click', () => {
-                Animations.stopCelebration();
-
-                const celebCanvas = $('celebration-canvas');
-                if (celebCanvas) {
-                    celebCanvas.classList.add('hidden');
-                }
-
-                completionBanner.classList.add('hidden');
-
-                showSolarSystem();
+        // Botón superior derecho: ir a la vista final (solo visible con 8/8)
+        if (goFinalBtn) {
+            goFinalBtn.addEventListener('click', () => {
+                if (currentState !== STATES.SOLAR_SYSTEM || isTransitioning) return;
+                window.location.href = 'final.html';
             });
         }
 
-
+        // Cerrar modal de bloqueo
+        const lockedCloseBtn = $('locked-close-btn');
 
         // Teclado: Escape
         document.addEventListener('keydown', e => {
@@ -139,9 +132,6 @@
                 if (lockedModal && !lockedModal.classList.contains('hidden')) {
                     lockedModal.classList.add('hidden');
                     lockedModal.setAttribute('aria-hidden', 'true');
-                }
-                if (completionBanner && !completionBanner.classList.contains('hidden')) {
-                    completionBanner.classList.add('hidden');
                 }
             }
         });
@@ -158,6 +148,10 @@
             '  - UniversoCartas.Storage.resetProgress()             : Reiniciar progreso a cero',
             'color: #6e8efb; font-size: 13px; font-weight: bold;'
         );
+
+        if (enteredFromFinal) {
+            onStartJourney();
+        }
     }
 
     // ========================
@@ -279,6 +273,7 @@
                 // Descubrir carta nueva
                 const success = Storage.discoverPlanet(planetId);
                 if (success) {
+                    revealFinalOnCompletion = Storage.getProgressSummary().allDiscovered;
                     travelToPlanet(planetId);
                 }
                 break;
@@ -425,6 +420,13 @@
                 transitionCanvas.classList.add('hidden');
                 currentPlanetId = null;
 
+                // Al salir del 8.º planeta recién descubierto: ir al final (la canción suena allí)
+                if (revealFinalOnCompletion) {
+                    revealFinalOnCompletion = false;
+                    window.location.replace('final.html?reveal=1');
+                    return;
+                }
+
                 showSolarSystem();
                 isTransitioning = false;
             });
@@ -451,20 +453,13 @@
         });
         Universe.updatePlanetStates(states);
 
-        // Pantalla de finalización
         if (summary.allDiscovered) {
-            completionBanner.classList.remove('hidden');
+            // Con 8/8 se queda en el universo y aparece el botón "Ir al final"
             uiCountdown.classList.add('hidden');
-
-            Animations.stopCelebration();
-            const celebCanvas = $('celebration-canvas');
-            if (celebCanvas) {
-                celebCanvas.classList.remove('hidden');
-                Animations.playCelebration(celebCanvas);
-            }
+            if (goFinalBtn) goFinalBtn.classList.remove('hidden');
         } else {
-            completionBanner.classList.add('hidden');
             uiCountdown.classList.remove('hidden');
+            if (goFinalBtn) goFinalBtn.classList.add('hidden');
         }
     }
 

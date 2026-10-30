@@ -10,10 +10,10 @@
  *   6. Tooltip de planetas
  *   7. Pantalla de carta
  *   8. Modal de bloqueo
- *   9. Banner de finalización
- *  10. Responsive
- *  11. Accesibilidad
- *  12. Animaciones
+ *   9. Responsive
+ *  10. Accesibilidad
+ *  11. Animaciones
+ *  12. Vista final
  */
 
 /* ============================
@@ -42,6 +42,90 @@
     --planet-secondary: #4a5fc1;
     --planet-accent: #a0b4ff;
     --planet-glow: rgba(110, 142, 251, 0.4);
+}
+
+/* ============================
+   12. VISTA FINAL
+   ============================ */
+
+#final-universe {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    isolation: isolate;
+    background:
+        radial-gradient(ellipse at center, rgba(20, 27, 62, 0.5), transparent 58%),
+        #000005;
+}
+
+#final-starfield {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+.moon-portal {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: min(74vw, 31rem);
+    aspect-ratio: 1;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.6s ease, filter 0.6s ease;
+    filter: drop-shadow(0 0 2rem rgba(151, 185, 255, 0.35));
+}
+
+.moon-portal-reveal {
+    animation: moonReveal 1.8s ease-out both;
+}
+
+.moon-portal::before {
+    content: "";
+    position: absolute;
+    inset: -12%;
+    z-index: -1;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(163, 193, 255, 0.32), rgba(108, 139, 218, 0.12) 42%, transparent 72%);
+    opacity: 0.8;
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.moon-portal img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 0 1.5rem rgba(186, 208, 255, 0.3));
+    transition: filter 0.6s ease;
+}
+
+.moon-portal:hover,
+.moon-portal:focus-visible {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 3rem rgba(166, 197, 255, 0.8));
+}
+
+.moon-portal:hover::before,
+.moon-portal:focus-visible::before {
+    opacity: 1;
+    transform: scale(1.18);
+}
+
+.moon-portal:hover img,
+.moon-portal:focus-visible img {
+    filter: drop-shadow(0 0 2.4rem rgba(206, 222, 255, 0.85));
+}
+
+.moon-portal:active {
+    transform: scale(1.04);
 }
 
 *,
@@ -587,82 +671,7 @@ canvas {
 }
 
 /* ============================
-   9. BANNER DE FINALIZACIÓN
-   ============================ */
-
-#completion-banner {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 25;
-    text-align: center;
-    max-width: 500px;
-    width: 90%;
-    background: var(--color-glass-bg);
-    border: 1px solid var(--color-glass-border);
-    border-radius: 20px;
-    padding: 2rem;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    box-shadow: 0 0 60px rgba(255, 215, 0, 0.1);
-    animation: fadeInUp 1s ease forwards;
-    pointer-events: auto;
-}
-
-.completion-title {
-    font-family: var(--font-display);
-    font-size: clamp(1.2rem, 3vw, 1.6rem);
-    font-weight: 300;
-    letter-spacing: 0.1em;
-    color: var(--color-gold);
-    text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
-    margin-bottom: 1rem;
-}
-
-.completion-text {
-    font-size: clamp(0.85rem, 2vw, 0.95rem);
-    line-height: 1.8;
-    color: var(--color-text-dim);
-}
-
-.completion-btn {
-    margin-top: 1.5rem;
-    padding: 0.75rem 1.8rem;
-    font-family: var(--font-main);
-    font-size: 0.85rem;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: #ffffff;
-    background: rgba(255, 215, 0, 0.15);
-    border: 1px solid rgba(255, 215, 0, 0.4);
-    border-radius: 30px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
-}
-
-.completion-btn:hover {
-    background: rgba(255, 215, 0, 0.25);
-    border-color: rgba(255, 215, 0, 0.8);
-    box-shadow: 0 0 25px rgba(255, 215, 0, 0.4);
-    transform: scale(1.03);
-}
-
-.completion-btn:active {
-    transform: scale(0.98);
-}
-
-#celebration-canvas {
-    position: absolute;
-    inset: 0;
-    z-index: 15;
-    pointer-events: none;
-}
-
-/* ============================
-   10. RESPONSIVE
+   9. RESPONSIVE
    ============================ */
 
 /* Tablets */
@@ -751,7 +760,7 @@ canvas {
 }
 
 /* ============================
-   11. ACCESIBILIDAD
+   10. ACCESIBILIDAD
    ============================ */
 
 /* Focus visible */
@@ -797,7 +806,7 @@ button:focus:not(:focus-visible) {
 }
 
 /* ============================
-   12. ANIMACIONES
+   11. ANIMACIONES
    ============================ */
 
 @keyframes fadeInUp {
@@ -838,6 +847,23 @@ button:focus:not(:focus-visible) {
     }
 }
 
+@keyframes moonReveal {
+    0% {
+        opacity: 0;
+        filter: drop-shadow(0 0 0 rgba(166, 197, 255, 0));
+    }
+
+    70% {
+        opacity: 1;
+        filter: drop-shadow(0 0 4rem rgba(166, 197, 255, 0.9));
+    }
+
+    100% {
+        opacity: 1;
+        filter: drop-shadow(0 0 2rem rgba(151, 185, 255, 0.35));
+    }
+}
+
 /* Scrollbar personalizado */
 ::-webkit-scrollbar {
     width: 6px;
@@ -854,4 +880,47 @@ button:focus:not(:focus-visible) {
 
 ::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.25);
+}
+
+/* ============================
+   BOTÓN "IR AL FINAL" (arriba a la derecha)
+   ============================ */
+
+#go-final-btn {
+    position: absolute;
+    top: 1.2rem;
+    right: 1.2rem;
+    z-index: 30;
+    padding: 0.6rem 1.3rem;
+    font-family: var(--font-main);
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #ffffff;
+    background: rgba(255, 215, 0, 0.15);
+    border: 1px solid rgba(255, 215, 0, 0.4);
+    border-radius: 30px;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+#go-final-btn:hover,
+#go-final-btn:focus-visible {
+    background: rgba(255, 215, 0, 0.25);
+    border-color: rgba(255, 215, 0, 0.8);
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.4);
+}
+
+/* En pantallas pequeñas baja un poco para no chocar con el título centrado */
+@media (max-width: 600px) {
+    #go-final-btn {
+        top: 3.6rem;
+        right: 1rem;
+        padding: 0.45rem 1rem;
+        font-size: 0.7rem;
+    }
 }

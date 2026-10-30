@@ -34,11 +34,13 @@ npx serve
 universo-cartas/
 │
 ├── index.html           # Estructura semántica, accesibilidad y contenedores
+├── final.html           # Vista final con Luna-Dita y fondo estelar
 ├── README.md            # Documentación y guía de personalización
 ├── css/
 │   └── styles.css       # Estilos visuales, glassmorphism, responsive y animaciones
 ├── js/
 │   ├── main.js          # Orquestador principal, flujo de estados y temporizador
+│   ├── final.js         # Fondo estelar interactivo de la vista final
 │   ├── universe.js      # Escena Three.js, planetas con imágenes locales y zoom 3D
 │   ├── animations.js    # Canvas 2D: hiperespacio, túneles de color y partículas
 │   ├── planets.js       # Configuración orbital y tamaños de los planetas
@@ -54,7 +56,8 @@ universo-cartas/
     ├── Jupiter-planet.png
     ├── Saturno.png
     ├── Urano.png
-    └── Neptuno.png
+    ├── Neptuno.png
+    └── luna-dita.png
 ```
 
 ---
@@ -95,7 +98,7 @@ No es necesario modificar ningún otro archivo para cambiar textos, colores o im
 3. **Persistencia garantizada:** La fecha de desbloqueo se guarda con timestamp en `localStorage` y `cookies`, por lo que al recargar la página o cerrar el navegador el tiempo restante sigue siendo exacto.
 4. **Revisita sin límites:** Cualquier carta ya descubierta puede volver a leerse en cualquier momento sin reiniciar ni alterar el temporizador.
 5. **Planetas bloqueados:** Muestran un indicador visual y un modal con el tiempo exacto restante si se intentan abrir antes de tiempo.
-6. **Completado:** Al descubrir los 8 planetas, aparece la pantalla de celebración estelar y todos los planetas quedan permanentemente abiertos para su lectura.
+6. **Completado:** Al descubrir los 8 planetas, se muestra la vista final con Luna-Dita y empieza a sonar la canción de la carpeta `song/`. Si vuelves a entrar con los 8 planetas ya descubiertos, llegas al universo con un botón "Ir al final" arriba a la derecha. Desde la vista final, al pulsar la luna, se inicia el viaje hiperespacial de regreso al sistema solar con los 8 planetas abiertos.
 
 ---
 
@@ -127,4 +130,3 @@ Para verificar y probar la experiencia sin esperar 24 horas reales, puedes abrir
 - **Conservación fiel de las imágenes locales:** Sprites transparentes con soporte de aspecto proporcional (como los anillos de Saturno).
 - **Diseño adaptable:** Optimizado para pantallas táctiles (móviles y tablets) y computadoras de escritorio.
 - **Accesibilidad:** Soporta navegación por teclado (`Enter`, `Espacio`, `Escape`) y respeta la preferencia de movimiento reducido (`prefers-reduced-motion`).
-

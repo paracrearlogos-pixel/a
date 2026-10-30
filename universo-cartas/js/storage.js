@@ -16,7 +16,7 @@
     'use strict';
 
     // Duración del bloqueo entre cartas nuevas: 24 horas en milisegundos
-    const UNLOCK_INTERVAL_MS = 60 * 1000; // PRUEBAS: 1 minuto
+    const UNLOCK_INTERVAL_MS = 24 * 60 * 60 * 1000; // PRUEBAS: 1 minuto
 
     // =========================================================================
     // REGLA OFICIAL: 1 carta nueva cada 24 horas.

@@ -45,9 +45,6 @@
         <!-- Contenedor Three.js -->
         <div id="three-container"></div>
 
-        <!-- Canvas de celebración (finalización) -->
-        <canvas id="celebration-canvas" class="hidden" aria-hidden="true"></canvas>
-
         <!-- UI Overlay -->
 
         <!-- Título -->
@@ -77,16 +74,11 @@
         <!-- Tooltip de planeta -->
         <div id="planet-tooltip" class="hidden" aria-hidden="true"></div>
 
-        <!-- Banner de finalización -->
-        <div id="completion-banner" class="hidden" role="alert">
-            <div class="completion-title">✦ Viaje Completado.✦</div>
-            <p class="completion-text">
-                Cada vez que mire las estrellas, recuerde que hay alguien que piensa en usted con muchísimo cariño, más
-                de lo que a veces sabe expresar con palabras ✨</p>
-            <button id="completion-close-btn" class="completion-btn" aria-label="Continuar explorando el sistema solar">
-                Continuar Explorando
-            </button>
-        </div>
+        <!-- Botón para ir a la vista final (arriba a la derecha, solo con 8/8) -->
+        <button id="go-final-btn" class="hidden" type="button" aria-label="Ir a la vista final">
+            Ir al final ✦
+        </button>
+
     </div>
 
     <!-- ==============================
