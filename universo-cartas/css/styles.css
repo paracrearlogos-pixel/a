@@ -738,7 +738,7 @@ canvas {
 
     /* Tooltip centrado arriba */
     #planet-tooltip {
-        top: 4rem;
+        top: 6rem;
         transform: translateX(-50%);
     }
 }
